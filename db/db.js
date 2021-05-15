@@ -33,7 +33,8 @@ const db = {
   Sequelize
 }
 
-db.User = require('../models/User')(sequelize, Sequelize)
+db.User = require('../models/User')(sequelize, Sequelize).User
+db.Transaction = require('../models/User')(sequelize, Sequelize).Transaction
 db.RefreshToken = require('../models/RefreshToken')(sequelize, Sequelize)
 
 module.exports = db

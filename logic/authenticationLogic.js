@@ -1,6 +1,8 @@
 const { RefreshToken, User } = require('../db/db')
 const CustomError = require('../utils/CustomError')
 const userLogic = require('../logic/userLogic')
+const transationLogic = require('../logic/transactionLogic')
+const transactions = require('../utils/Transactions')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
@@ -8,7 +10,8 @@ const jwt = require('jsonwebtoken')
 const register = async (user) => {
   user.password = await encryptPassword(user.password)
   const createdUser = await User.create(user)
-
+  delete user.password
+  await transationLogic.createTransaction(createdUser.id, transactions.REGISTER, user)
   return createdUser
 }
 
@@ -18,12 +21,14 @@ const login = async ({ email, password }) => {
   const correctPass = await comparePasswords(password, user.password)
 
   if (!correctPass) {
+    await transationLogic.createTransaction(user.id, transactions.LOGIN, { success: false })
     throw new CustomError('Invalid credentials', 401)
   }
   const refreshToken = JWTRefreshToken(user)
   await RefreshToken.create({
     token: refreshToken
   })
+  await transationLogic.createTransaction(user.id, transactions.LOGIN, { success: true })
 
   return {
     token: JWTSign(user),

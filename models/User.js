@@ -36,5 +36,31 @@ module.exports = (sequelize, Sequelize) => {
     delete values.deletedAt
     return values
   }
-  return User
+  const Transaction = sequelize.define(
+    'Transaction',
+    {
+      id: {
+        type: Sequelize.UUID,
+        primaryKey: true,
+        defaultValue: Sequelize.UUIDV4
+      },
+      action: {
+        type: Sequelize.STRING
+      },
+      info: {
+        type: Sequelize.JSON
+      },
+      userId: {
+        type: Sequelize.UUID
+      }
+    },
+    {
+      paranoid: true
+    }
+  )
+  Transaction.belongsTo(User, {
+    foreignKey: 'userId',
+    as: 'user'
+  })
+  return { User, Transaction }
 }
