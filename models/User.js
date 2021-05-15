@@ -59,6 +59,11 @@ module.exports = (sequelize, Sequelize) => {
       paranoid: true
     }
   )
+  Transaction.prototype.toJSON = function () {
+    const values = Object.assign({}, this.get())
+    delete values.deletedAt
+    return values
+  }
   Transaction.belongsTo(User, {
     foreignKey: 'userId',
     as: 'user'
