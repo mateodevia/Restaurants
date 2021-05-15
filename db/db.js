@@ -1,5 +1,5 @@
 const { Sequelize } = require('sequelize')
-const debug = require('debug')('db')
+const debug = require('debug')('back:db:')
 const credentials = require('./credentials')[process.env.NODE_ENV]
 debug('Connecting to database')
 

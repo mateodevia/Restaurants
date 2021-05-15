@@ -8,6 +8,7 @@ const db = require('./db/db')
 db.sequelize.sync()
 const authRouter = require('./routes/authentication')
 const usersRouter = require('./routes/users')
+const restaurantsRouter = require('./routes/restaurants')
 
 const app = express()
 
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 // Routes
 app.use('/authentication', authRouter)
 app.use('/users', usersRouter)
+app.use('/restaurants', restaurantsRouter)
 
 // error handler
 app.use(errorHandler)
