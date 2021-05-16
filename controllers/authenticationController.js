@@ -17,8 +17,17 @@ const refreshToken = async (req, res) => {
   res.send(token)
 }
 
+const logout = async (req, res) => {
+  console.log(req.user)
+  const token = await authenticationLogic.logout(
+    req.user.id
+  )
+  res.send(token)
+}
+
 module.exports = {
   register,
   login,
-  refreshToken
+  refreshToken,
+  logout
 }

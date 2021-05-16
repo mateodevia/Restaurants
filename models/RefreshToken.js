@@ -3,6 +3,9 @@ module.exports = (sequelize, Sequelize) => {
     token: {
       type: Sequelize.STRING(1234),
       primaryKey: true
+    },
+    userId: {
+      type: Sequelize.UUID
     }
   })
 

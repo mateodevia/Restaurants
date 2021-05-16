@@ -31,7 +31,9 @@ describe('Unit Tests: Authentication', () => {
         email: faker.internet.email(),
         password: faker.internet.password(8)
       }
-      this.createStub.resolves()
+      this.createStub.resolves({
+        id: faker.datatype.uuid()
+      })
 
       // Act
       await authenticationLogic.register(mockUser)

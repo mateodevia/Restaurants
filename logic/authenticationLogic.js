@@ -8,6 +8,14 @@ const jwt = require('jsonwebtoken')
 
 /* Creates a user in the DB with its password encripted */
 const register = async (user) => {
+  const existing = await User.findOne({
+    where: {
+      email: user.email
+    }
+  })
+  if (existing) {
+    throw new CustomError('Email already exists', 400)
+  }
   user.password = await encryptPassword(user.password)
   const createdUser = await User.create(user)
   delete user.password
@@ -26,7 +34,8 @@ const login = async ({ email, password }) => {
   }
   const refreshToken = JWTRefreshToken(user)
   await RefreshToken.create({
-    token: refreshToken
+    token: refreshToken,
+    userId: user.id
   })
   await transationLogic.createTransaction(user.id, transactions.LOGIN, { success: true })
 
@@ -51,6 +60,20 @@ const refreshToken = async (token) => {
 
   return {
     token: JWTSign(user)
+  }
+}
+
+/* Invalidates refreshToken */
+const logout = async (userId) => {
+  console.log('va a borrar', userId)
+  await RefreshToken.destroy({
+    where: {
+      userId
+    }
+  })
+
+  return {
+    msg: 'successs'
   }
 }
 
@@ -105,5 +128,6 @@ const encryptPassword = async (password) => {
 module.exports = {
   register,
   login,
-  refreshToken
+  refreshToken,
+  logout
 }

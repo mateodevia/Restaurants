@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const authenticationControler = require('../controllers/authenticationController')
 const wrap = require('../middleware/asyncWrapper')
+const auth = require('../middleware/authentication')
 const { validate, Joi } = require('express-validation')
 
 // Validations
@@ -39,5 +40,8 @@ router.post('/login', loginValidation, wrap(authenticationControler.login))
 
 /* GET generates a new JWT from a refresh token */
 router.post('/refresh', wrap(authenticationControler.refreshToken))
+
+/* DELETE generates a new JWT from a refresh token */
+router.delete('/logout', auth, wrap(authenticationControler.logout))
 
 module.exports = router
